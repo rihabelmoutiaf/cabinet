@@ -1,4 +1,7 @@
 package ma.project.dentalTech.repository.modules.users.api;
 
-public class AdminRepository {
+import ma.project.dentalTech.entities.users.Admin;
+import ma.project.dentalTech.repository.common.CrudRepository;
+
+public interface AdminRepository extends CrudRepository<Admin, Long> {
 }

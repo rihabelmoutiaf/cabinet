@@ -1,4 +1,8 @@
 package ma.project.dentalTech.entities.enums;
 
-public class RoleType {
+public enum RoleType {
+    ADMIN,
+    MEDECIN,
+    SECRETAIRE,
+    STAFF
 }

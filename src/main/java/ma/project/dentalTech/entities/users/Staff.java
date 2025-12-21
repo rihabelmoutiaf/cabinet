@@ -1,4 +1,11 @@
 package ma.project.dentalTech.entities.users;
 
-public class Staff {
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "staff")
+public class Staff extends Utilisateur {
+
+    public Staff() {}
 }
