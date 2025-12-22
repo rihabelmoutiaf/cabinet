@@ -1,4 +1,7 @@
 package ma.project.dentalTech.entities.enums;
 
-public class StatutConsultation {
+public enum StatutConsultation {
+    TERMINEE,
+    EN_COURS,
+    ANNULEE
 }
