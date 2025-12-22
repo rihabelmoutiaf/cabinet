@@ -1,28 +1,35 @@
 package ma.project.dentalTech.entities.users;
 
-import jakarta.persistence.*;
-import ma.project.dentalTech.entities.base.BaseEntity;
-import ma.project.dentalTech.entities.enums.RoleType;
 
-@Entity
-@Table(name = "roles")
-public class Role extends BaseEntity {
 
-    @Enumerated(EnumType.STRING)
-    @Column(unique = true, nullable = false)
-    private RoleType roleType;
+public class Role {
+
+
+    private Long id;
+    private String nom;
+    private String description;
+
 
     public Role() {}
 
-    public Role(RoleType roleType) {
-        this.roleType = roleType;
+    public Role(Long id, String nom, String description) {
+        this.id = id;
+        this.nom = nom;
+        this.description = description;
     }
 
-    public RoleType getRoleType() {
-        return roleType;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setRoleType(RoleType roleType) {
-        this.roleType = roleType;
-    }
+    public String getNom() { return nom; }
+    public void setNom(String nom) { this.nom = nom; }
+
+    public String getDescription() { return description; }
+    public void setDescription(String description) { this.description = description; }
+
+
+    public Long getIdRole() { return id; }
+    public void setIdRole(Long idRole) { this.id = idRole; }
+    public String getLibelle() { return nom; }
+    public void setLibelle(String libelle) { this.nom = libelle; }
 }

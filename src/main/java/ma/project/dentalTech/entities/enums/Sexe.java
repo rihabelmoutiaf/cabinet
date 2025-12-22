@@ -1,4 +1,6 @@
 package ma.project.dentalTech.entities.enums;
 
-public class Sexe {
+public enum Sexe {
+    Homme, Femme,
+    AUTRE
 }

@@ -1,28 +1,71 @@
 package ma.project.dentalTech.entities.users;
 
-import jakarta.persistence.*;
-import ma.project.dentalTech.entities.base.BaseEntity;
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "notifications")
+import ma.project.dentalTech.entities.base.BaseEntity;
+import ma.project.dentalTech.entities.enums.PrioriteNotification;
+import ma.project.dentalTech.entities.enums.TypeNotification;
+import ma.project.dentalTech.entities.enums.TitreNotification;
+
 public class Notification extends BaseEntity {
 
-    @Column(nullable = false)
     private String message;
+    private TypeNotification type;
+    private PrioriteNotification priorite;
+    private TitreNotification titre;
+    private boolean lu;
 
-    @ManyToOne
-    @JoinColumn(name = "utilisateur_id", nullable = false)
+    private Long utilisateurId;
     private Utilisateur utilisateur;
 
-    @Column(nullable = false)
-    private boolean lu = false;
+    public Notification() {
+        super();
+        this.lu = false;
+    }
+
+    public Notification(String message, TypeNotification type,
+                        PrioriteNotification priorite, TitreNotification titre,
+                        Long utilisateurId) {
+        this();
+        this.message = message;
+        this.type = type;
+        this.priorite = priorite;
+        this.titre = titre;
+        this.utilisateurId = utilisateurId;
+    }
+
+    /* ================= GETTERS & SETTERS ================= */
 
     public String getMessage() {
         return message;
     }
 
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public TypeNotification getType() {
+        return type;
+    }
+
+    public void setType(TypeNotification type) {
+        this.type = type;
+    }
+
+    public PrioriteNotification getPriorite() {
+        return priorite;
+    }
+
+    public void setPriorite(PrioriteNotification priorite) {
+        this.priorite = priorite;
+    }
+
+    public TitreNotification getTitre() {
+        return titre;
+    }
+
+    public void setTitre(TitreNotification titre) {
+        this.titre = titre;
     }
 
     public boolean isLu() {
@@ -31,5 +74,21 @@ public class Notification extends BaseEntity {
 
     public void setLu(boolean lu) {
         this.lu = lu;
+    }
+
+    public Long getUtilisateurId() {
+        return utilisateurId;
+    }
+
+    public void setUtilisateurId(Long utilisateurId) {
+        this.utilisateurId = utilisateurId;
+    }
+
+    public Utilisateur getUtilisateur() {
+        return utilisateur;
+    }
+
+    public void setUtilisateur(Utilisateur utilisateur) {
+        this.utilisateur = utilisateur;
     }
 }

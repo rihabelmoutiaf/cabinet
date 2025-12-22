@@ -1,26 +1,69 @@
 package ma.project.dentalTech.entities.users;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import ma.project.dentalTech.entities.enums.Sexe;
 
-@Entity
-@Table(name = "admins")
+/**
+ * Entité Admin
+ * Hérite de Utilisateur
+ */
 public class Admin extends Utilisateur {
 
-    public Admin() {}
+    /* ================= CONSTRUCTEURS ================= */
 
-    public void setEmail(String email) {
+    public Admin() {
+        super();
     }
 
-    public void setNom(String nom) {
+    public Admin(Long id, String nom, String prenom, String email) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
     }
 
-    public void setId(long id) {
+    public Admin(Long id, String nom, String prenom, String email,
+                 String login, String motDePasse, Sexe sexe) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.login = login;
+        this.motDePasse = motDePasse;
+        this.sexe = sexe;
     }
 
-    public void setMotDePasse(String motDePasse) {
+    public Admin(Long id, String nom, String prenom, String email,
+                 String adresse, String tel, Sexe sexe,
+                 String login, String motDePasse,
+                 Long roleId) {
+
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.email = email;
+        this.adresse = adresse;
+        this.tel = tel;
+        this.sexe = sexe;
+        this.login = login;
+        this.motDePasse = motDePasse;
+        this.roleId = roleId;
     }
 
-    public void setActif(boolean actif) {
+    /* ================= MÉTHODES MÉTIER (optionnel) ================= */
+
+    public boolean isAdmin() {
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "id=" + id +
+                ", nom='" + nom + '\'' +
+                ", prenom='" + prenom + '\'' +
+                ", email='" + email + '\'' +
+                ", login='" + login + '\'' +
+                ", active=" + active +
+                '}';
     }
 }
