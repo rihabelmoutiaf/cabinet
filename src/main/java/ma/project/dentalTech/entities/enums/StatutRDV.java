@@ -1,4 +1,7 @@
 package ma.project.dentalTech.entities.enums;
 
-public class StatutRDV {
+public enum StatutRDV {
+    PLANIFIE,
+    ANNULE,
+    TERMINE
 }

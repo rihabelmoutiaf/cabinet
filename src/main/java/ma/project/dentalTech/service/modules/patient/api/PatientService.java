@@ -1,4 +1,12 @@
 package ma.project.dentalTech.service.modules.patient.api;
 
-public class PatientService {
+
+
+import java.util.List;
+import ma.project.dentalTech.mvc.dto.PatientDTO;
+
+public interface PatientService {
+
+
+    List<PatientDTO> getTodayPatientsAsDTO();
 }

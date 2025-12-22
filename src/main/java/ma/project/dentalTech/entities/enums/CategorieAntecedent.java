@@ -1,4 +1,8 @@
 package ma.project.dentalTech.entities.enums;
 
-public class CategorieAntecedent {
+public enum CategorieAntecedent {
+    MEDICAL,
+    CHIRURGICAL,
+    ALLERGIE,
+    HABITUDE_VIE
 }

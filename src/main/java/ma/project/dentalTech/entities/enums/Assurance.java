@@ -1,4 +1,5 @@
 package ma.project.dentalTech.entities.enums;
 
-public class Assurance {
+public enum Assurance {
+    CNOPS, CNSS, Autre, Aucune
 }

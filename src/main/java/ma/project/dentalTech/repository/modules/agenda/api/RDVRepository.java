@@ -1,4 +1,18 @@
 package ma.project.dentalTech.repository.modules.agenda.api;
+import ma.project.dentalTech.entities.agenda.RDV;
+import ma.project.dentalTech.repository.common.CrudRepository;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 
-public class RDVRepository {
+
+public interface RDVRepository extends CrudRepository<RDV, Long> {
+
+
+    List<RDV> findByPatientId(Long patientId);
+    List<RDV> findByMedecinId(Long medecinId);
+    List<RDV> findByDateBetween(LocalDateTime start, LocalDateTime end);
+
+    List<RDV> findTodayRdv();
+
 }

@@ -4,11 +4,7 @@ package ma.project.dentalTech.entities.users;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-
-
-
-
-
+import ma.project.dentalTech.entities.agenda.AgendaMedecin;
 
 
 public class Medecin extends Staff {
@@ -25,7 +21,7 @@ public class Medecin extends Staff {
 
     private String specialite;
     private String agendaMensuel;
-    private List<Agenda> agendas;
+    private List<AgendaMedecin> agendas;
 
     public Medecin() {
         super();
@@ -67,7 +63,7 @@ public class Medecin extends Staff {
     public String getAgendaMensuel() { return agendaMensuel; }
     public void setAgendaMensuel(String agendaMensuel) { this.agendaMensuel = agendaMensuel; }
 
-    public List<Agenda> getAgendas() { return agendas; }
-    public void setAgendas(List<Agenda> agendas) { this.agendas = agendas; }
-    public void addAgenda(Agenda agenda) { this.agendas.add(agenda); }
+    public List<AgendaMedecin> getAgendas() { return agendas; }
+    public void setAgendas(List<AgendaMedecin> agendas) { this.agendas = agendas; }
+    public void addAgenda(AgendaMedecin agenda) { this.agendas.add(agenda); }
 }
