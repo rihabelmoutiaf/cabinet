@@ -1,4 +1,3 @@
-// src/main/java/ma/project/dentalTech/repository/modules/users/api/UtilisateurRepository.java
 package ma.project.dentalTech.repository.modules.users.api;
 
 import ma.project.dentalTech.entities.users.Utilisateur;

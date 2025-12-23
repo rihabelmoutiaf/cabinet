@@ -122,6 +122,11 @@ public class AdminRepositoryImpl implements AdminRepository {
     }
 
     @Override
+    public boolean delete(Long aLong) {
+        return false;
+    }
+
+    @Override
     public void delete(Admin admin) {
         String sql = "DELETE FROM utilisateurs WHERE id = ? AND type_user = 'ADMIN'";
 
@@ -133,5 +138,20 @@ public class AdminRepositoryImpl implements AdminRepository {
         } catch (SQLException e) {
             throw new RuntimeException("Erreur delete Admin", e);
         }
+    }
+
+    @Override
+    public Admin findByEmail(String email) {
+        return null;
+    }
+
+    @Override
+    public List<Admin> findAllActive() {
+        return List.of();
+    }
+
+    @Override
+    public long countAdmins() {
+        return 0;
     }
 }

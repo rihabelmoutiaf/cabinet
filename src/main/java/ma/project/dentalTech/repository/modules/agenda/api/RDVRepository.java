@@ -9,6 +9,8 @@ import java.util.Optional;
 public interface RDVRepository extends CrudRepository<RDV, Long> {
 
 
+    void delete(RDV r);
+
     List<RDV> findByPatientId(Long patientId);
     List<RDV> findByMedecinId(Long medecinId);
     List<RDV> findByDateBetween(LocalDateTime start, LocalDateTime end);
