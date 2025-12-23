@@ -10,6 +10,9 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Implémentation du repository Utilisateur utilisant SessionFactory
+ */
 public class UtilisateurRepositoryImpl implements UtilisateurRepository {
 
     @Override
@@ -339,7 +342,11 @@ public class UtilisateurRepositoryImpl implements UtilisateurRepository {
         }
     }
 
-    // Méthode helper pour déterminer le type d'utilisateur
+    // ========== MÉTHODE HELPER ==========
+
+    /**
+     * Détermine le type d'utilisateur à partir de la classe
+     */
     private String determineTypeUser(Utilisateur u) {
         String className = u.getClass().getSimpleName();
 
