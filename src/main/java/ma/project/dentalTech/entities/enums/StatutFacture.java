@@ -1,4 +1,5 @@
 package ma.project.dentalTech.entities.enums;
 
-public class StatutFacture {
+public enum StatutFacture {
+    Payer,NonPayer
 }
