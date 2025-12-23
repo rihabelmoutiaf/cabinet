@@ -1,40 +1,45 @@
 package ma.project.dentalTech.entities.users;
 
+
 import java.time.LocalDateTime;
 
-import ma.project.dentalTech.entities.base.BaseEntity;
-import ma.project.dentalTech.entities.enums.PrioriteNotification;
-import ma.project.dentalTech.entities.enums.TypeNotification;
-import ma.project.dentalTech.entities.enums.TitreNotification;
+public class Notification {
 
-public class Notification extends BaseEntity {
+    private Long id;
+    private Long userId;
 
     private String message;
-    private TypeNotification type;
-    private PrioriteNotification priorite;
-    private TitreNotification titre;
-    private boolean lu;
+    private boolean lue;
 
-    private Long utilisateurId;
-    private Utilisateur utilisateur;
+    private LocalDateTime dateEnvoi;
 
     public Notification() {
-        super();
-        this.lu = false;
     }
 
-    public Notification(String message, TypeNotification type,
-                        PrioriteNotification priorite, TitreNotification titre,
-                        Long utilisateurId) {
-        this();
+    public Notification(Long id, Long userId, String message, LocalDateTime dateEnvoi) {
+        this.id = id;
+        this.userId = userId;
         this.message = message;
-        this.type = type;
-        this.priorite = priorite;
-        this.titre = titre;
-        this.utilisateurId = utilisateurId;
+        this.dateEnvoi = dateEnvoi;
+        this.lue = false;
     }
 
-    /* ================= GETTERS & SETTERS ================= */
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getMessage() {
         return message;
@@ -44,51 +49,19 @@ public class Notification extends BaseEntity {
         this.message = message;
     }
 
-    public TypeNotification getType() {
-        return type;
+    public boolean isLue() {
+        return lue;
     }
 
-    public void setType(TypeNotification type) {
-        this.type = type;
+    public void setLue(boolean lue) {
+        this.lue = lue;
     }
 
-    public PrioriteNotification getPriorite() {
-        return priorite;
+    public LocalDateTime getDateEnvoi() {
+        return dateEnvoi;
     }
 
-    public void setPriorite(PrioriteNotification priorite) {
-        this.priorite = priorite;
-    }
-
-    public TitreNotification getTitre() {
-        return titre;
-    }
-
-    public void setTitre(TitreNotification titre) {
-        this.titre = titre;
-    }
-
-    public boolean isLu() {
-        return lu;
-    }
-
-    public void setLu(boolean lu) {
-        this.lu = lu;
-    }
-
-    public Long getUtilisateurId() {
-        return utilisateurId;
-    }
-
-    public void setUtilisateurId(Long utilisateurId) {
-        this.utilisateurId = utilisateurId;
-    }
-
-    public Utilisateur getUtilisateur() {
-        return utilisateur;
-    }
-
-    public void setUtilisateur(Utilisateur utilisateur) {
-        this.utilisateur = utilisateur;
+    public void setDateEnvoi(LocalDateTime dateEnvoi) {
+        this.dateEnvoi = dateEnvoi;
     }
 }

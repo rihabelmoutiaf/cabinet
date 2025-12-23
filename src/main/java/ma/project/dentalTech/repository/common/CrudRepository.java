@@ -1,16 +1,20 @@
 package ma.project.dentalTech.repository.common;
 
+
 import java.util.List;
+import java.util.Optional;
 
 public interface CrudRepository<T, ID> {
 
-    T save(T entity);
-
-    T update(T entity);
-
-    boolean delete(ID id);
-
-    T findById(ID id);
-
     List<T> findAll();
+
+    Optional<T> findById(ID id);
+
+    void create(T patient);
+
+    void update(T patient);
+
+    void delete(T patient);
+
+    void deleteById(ID id);
 }

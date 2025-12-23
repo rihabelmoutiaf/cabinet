@@ -1,29 +1,22 @@
 package ma.project.dentalTech.repository.modules.users.api;
 
 import ma.project.dentalTech.entities.users.Utilisateur;
-import ma.project.dentalTech.repository.common.CrudRepository;
 
 import java.util.List;
 
-public interface UtilisateurRepository extends CrudRepository<Utilisateur, Long> {
+public interface UtilisateurRepository<T extends Utilisateur> {
 
-    Utilisateur findByEmail(String email);
+    T save(T utilisateur);
 
-    Utilisateur findByLogin(String login);
+    T findById(Long id);
 
-    List<Utilisateur> findByTypeUser(String typeUser);
+    T findByEmail(String email);
 
-    boolean existsByEmail(String email);
+    List<T> findAll();
 
-    boolean existsByLogin(String login);
+    List<T> findByRoleId(Long roleId);
 
-    void updateLastLogin(Long userId);
+    void update(T utilisateur);
 
-    void incrementFailedAttempts(Long userId);
-
-    void resetFailedAttempts(Long userId);
-
-    void lockAccount(Long userId);
-
-    void unlockAccount(Long userId);
+    void delete(Long id);
 }

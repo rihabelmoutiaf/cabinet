@@ -1,22 +1,22 @@
 package ma.project.dentalTech.repository.modules.patient.api;
+
 import ma.project.dentalTech.entities.patient.Antecedent;
-import ma.project.dentalTech.entities.patient.Patient;
-import ma.project.dentalTech.repository.common.CrudRepository;
 
 import java.util.List;
-import java.util.Optional;
 
+public interface AntecedentRepository {
 
+    Antecedent save(Antecedent antecedent);
 
+    Antecedent findById(Long id);
 
-public interface AntecedentRepository extends CrudRepository<Antecedent, Long> {
+    List<Antecedent> findByPatient(Long patientId);
 
-    Optional<Antecedent> findByNom(String nom);
+    List<Antecedent> findByCategorie(String categorie);
 
-    boolean existsById(Long id);
-    long count();
-    List<Antecedent> findPage(int limit, int offset);
+    List<Antecedent> findAll();
 
+    void update(Antecedent antecedent);
 
-    List<Patient> getPatientsHavingAntecedent(Long antecedentId);
+    void delete(Long id);
 }

@@ -1,24 +1,22 @@
 package ma.project.dentalTech.repository.modules.users.api;
 
 import ma.project.dentalTech.entities.users.Admin;
-import ma.project.dentalTech.repository.common.CrudRepository;
 
 import java.util.List;
 
-public interface AdminRepository extends CrudRepository<Admin, Long> {
+public interface AdminRepository {
 
-    /**
-     * Trouve un admin par son email
-     */
+    Admin save(Admin admin);
+
+    Admin findById(Long id);
+
     Admin findByEmail(String email);
 
-    /**
-     * Trouve tous les admins actifs
-     */
-    List<Admin> findAllActive();
+    Admin findByLogin(String login);
 
-    /**
-     * Compte le nombre total d'admins
-     */
-    long countAdmins();
+    List<Admin> findAll();
+
+    void update(Admin admin);
+
+    void delete(Long id);
 }

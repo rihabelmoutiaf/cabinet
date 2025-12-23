@@ -3,14 +3,14 @@ package ma.project.dentalTech.repository.modules.dossierMedical.api;
 import ma.project.dentalTech.entities.dossierMedical.Certificat;
 import ma.project.dentalTech.repository.common.CrudRepository;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
-public interface CertificatRepo extends CrudRepository<Certificat, Long> {
+public interface CertificatRepository extends CrudRepository<Certificat, Long> {
 
     List<Certificat> findByPatientId(Long patientId);
 
-    List<Certificat> findByConsultationId(Long consultationId);
+    List<Certificat> findByUtilisateurId(Long utilisateurId);
 
-    List<Certificat> findByDateDebutBetween(LocalDate debut, LocalDate fin);
+    List<Certificat> findByDateEmissionBetween(LocalDateTime debut, LocalDateTime fin);
 }

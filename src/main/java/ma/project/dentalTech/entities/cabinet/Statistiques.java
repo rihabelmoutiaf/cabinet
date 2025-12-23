@@ -5,13 +5,12 @@ import java.util.List;
 
 public class Statistiques {
 
-    /* ================= IDENTITÉ ================= */
+
 
     private Long cabinetId;
     private LocalDate dateDebut;
     private LocalDate dateFin;
 
-    /* ================= DONNÉES FINANCIÈRES ================= */
 
     private Double totalCharges;
     private Double totalRevenues;
@@ -20,7 +19,7 @@ public class Statistiques {
     private int nombreCharges;
     private int nombreRevenues;
 
-    /* ================= CONSTRUCTEURS ================= */
+
 
     public Statistiques() {
         this.totalCharges = 0.0;
@@ -35,7 +34,6 @@ public class Statistiques {
         this.dateFin = dateFin;
     }
 
-    /* ================= MÉTHODES DE CALCUL ================= */
 
     public void calculer(List<Charges> charges, List<Revenues> revenues) {
 
@@ -53,7 +51,7 @@ public class Statistiques {
         benefice = totalRevenues - totalCharges;
     }
 
-    /* ================= GETTERS & SETTERS ================= */
+
 
     public Long getCabinetId() {
         return cabinetId;

@@ -1,34 +1,20 @@
 package ma.project.dentalTech.repository.modules.users.api;
 
 import ma.project.dentalTech.entities.users.Secretaire;
-import ma.project.dentalTech.repository.common.CrudRepository;
 
 import java.util.List;
 
-public interface SecretaireRepository extends CrudRepository<Secretaire, Long> {
+public interface SecretaireRepository {
 
-    /**
-     * Trouve une secrétaire par son numéro CNSS
-     */
-    Secretaire findByNumCNSS(String numCNSS);
+    Secretaire save(Secretaire secretaire);
 
-    /**
-     * Trouve toutes les secrétaires actives
-     */
-    List<Secretaire> findAllActive();
+    Secretaire findById(Long id);
 
-    /**
-     * Vérifie si un numéro CNSS existe déjà
-     */
-    boolean existsByNumCNSS(String numCNSS);
+    Secretaire findByEmail(String email);
 
-    /**
-     * Met à jour les informations spécifiques de la secrétaire
-     */
-    void updateSecretaireInfo(Secretaire secretaire);
+    List<Secretaire> findAll();
 
-    /**
-     * Compte le nombre total de secrétaires
-     */
-    long countSecretaires();
+    void update(Secretaire secretaire);
+
+    void delete(Long id);
 }

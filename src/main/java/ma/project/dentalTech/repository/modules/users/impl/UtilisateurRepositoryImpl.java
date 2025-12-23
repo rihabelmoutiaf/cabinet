@@ -1,361 +1,158 @@
 package ma.project.dentalTech.repository.modules.users.impl;
 
+import ma.project.dentalTech.entities.enums.Sexe;
+import ma.project.dentalTech.entities.users.Role;
 import ma.project.dentalTech.entities.users.Utilisateur;
-import ma.project.dentalTech.configuration.SessionFactory;
-import ma.project.dentalTech.repository.common.RowMappers;
 import ma.project.dentalTech.repository.modules.users.api.UtilisateurRepository;
 
 import java.sql.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Implémentation du repository Utilisateur utilisant SessionFactory
- */
-public class UtilisateurRepositoryImpl implements UtilisateurRepository {
+public abstract class UtilisateurRepositoryImpl<T extends Utilisateur> implements UtilisateurRepository<T> {
 
-    @Override
-    public Utilisateur save(Utilisateur u) {
-        String sql = """
-            INSERT INTO utilisateurs(
-                type_user, nom, prenom, email, tel, adresse, sexe, 
-                date_naissance, login, mot_de_passe, actif, 
-                premier_connexion, role_id
-            ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)
-            """;
+    protected Connection connection;
+    protected String tableName;
 
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
-            ps.setString(1, determineTypeUser(u));
-            ps.setString(2, u.getNom());
-            ps.setString(3, u.getPrenom());
-            ps.setString(4, u.getEmail());
-            ps.setString(5, u.getTel());
-            ps.setString(6, u.getAdresse());
-            ps.setString(7, u.getSexe() != null ? u.getSexe().name() : null);
-
-            if (u.getDateNaissance() != null) {
-                ps.setDate(8, Date.valueOf(u.getDateNaissance()));
-            } else {
-                ps.setNull(8, Types.DATE);
-            }
-
-            ps.setString(9, u.getLogin());
-            ps.setString(10, u.getMotDePasse());
-            ps.setBoolean(11, u.isActive());
-            ps.setBoolean(12, true); // premier_connexion
-            ps.setLong(13, u.getRoleId());
-
-            ps.executeUpdate();
-
-            try (ResultSet keys = ps.getGeneratedKeys()) {
-                if (keys.next()) {
-                    u.setId(keys.getLong(1));
-                }
-            }
-
-            return u;
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la création de l'utilisateur", e);
-        }
+    public UtilisateurRepositoryImpl(Connection connection, String tableName) {
+        this.connection = connection;
+        this.tableName = tableName;
     }
 
     @Override
-    public Utilisateur update(Utilisateur u) {
-        String sql = """
-            UPDATE utilisateurs SET 
-                nom=?, prenom=?, email=?, tel=?, adresse=?, sexe=?,
-                date_naissance=?, login=?, actif=?, role_id=?, updated_at=CURRENT_TIMESTAMP
-            WHERE id=?
-            """;
+    public T save(T u) {
+        String sql = String.format("""
+            INSERT INTO %s
+            (nom, prenom, email, adresse, tel, sexe, login, mot_de_passe, date_derniere_connexion, date_naissance, role_id)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """, tableName);
 
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, u.getNom());
             ps.setString(2, u.getPrenom());
             ps.setString(3, u.getEmail());
-            ps.setString(4, u.getTel());
-            ps.setString(5, u.getAdresse());
+            ps.setString(4, u.getAdresse());
+            ps.setString(5, u.getTel());
             ps.setString(6, u.getSexe() != null ? u.getSexe().name() : null);
-
-            if (u.getDateNaissance() != null) {
-                ps.setDate(7, Date.valueOf(u.getDateNaissance()));
-            } else {
-                ps.setNull(7, Types.DATE);
-            }
-
-            ps.setString(8, u.getLogin());
-            ps.setBoolean(9, u.isActive());
-            ps.setLong(10, u.getRoleId());
-            ps.setLong(11, u.getId());
+            ps.setString(7, u.getLogin());
+            ps.setString(8, u.getMotDePasse());
+            ps.setDate(9, u.getDateDerniereConnexion() != null ? Date.valueOf(u.getDateDerniereConnexion()) : null);
+            ps.setDate(10, u.getDateNaissance() != null ? Date.valueOf(u.getDateNaissance()) : null);
+            ps.setObject(11, u.getRoleId());
 
             ps.executeUpdate();
-            return u;
 
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la mise à jour de l'utilisateur", e);
-        }
-    }
-
-    @Override
-    public boolean delete(Long id) {
-        String sql = "DELETE FROM utilisateurs WHERE id=?";
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setLong(1, id);
-            return ps.executeUpdate() > 0;
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la suppression de l'utilisateur", e);
-        }
-    }
-
-    @Override
-    public Utilisateur findById(Long id) {
-        String sql = "SELECT * FROM utilisateurs WHERE id=?";
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setLong(1, id);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return RowMappers.mapUtilisateur(rs);
-                }
+            ResultSet rs = ps.getGeneratedKeys();
+            if (rs.next()) {
+                u.setId(rs.getLong(1));
             }
-            return null;
 
         } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la recherche de l'utilisateur", e);
+            e.printStackTrace();
         }
+
+        return u;
     }
 
     @Override
-    public List<Utilisateur> findAll() {
-        String sql = "SELECT * FROM utilisateurs ORDER BY nom, prenom";
-        List<Utilisateur> utilisateurs = new ArrayList<>();
+    public T findById(Long id) {
+        String sql = String.format("SELECT * FROM %s WHERE id = ?", tableName);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapToUtilisateur(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+    @Override
+    public T findByEmail(String email) {
+        String sql = String.format("SELECT * FROM %s WHERE email = ?", tableName);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapToUtilisateur(rs);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
+    @Override
+    public List<T> findAll() {
+        List<T> list = new ArrayList<>();
+        String sql = String.format("SELECT * FROM %s ORDER BY nom", tableName);
+        try (Statement st = connection.createStatement()) {
+            ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
-                utilisateurs.add(RowMappers.mapUtilisateur(rs));
+                list.add(mapToUtilisateur(rs));
             }
-
-            return utilisateurs;
-
         } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la récupération des utilisateurs", e);
+            e.printStackTrace();
         }
+        return list;
     }
 
     @Override
-    public Utilisateur findByEmail(String email) {
-        String sql = "SELECT * FROM utilisateurs WHERE email=?";
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setString(1, email);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return RowMappers.mapUtilisateur(rs);
-                }
+    public List<T> findByRoleId(Long roleId) {
+        List<T> list = new ArrayList<>();
+        String sql = String.format("SELECT * FROM %s WHERE role_id = ?", tableName);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, roleId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(mapToUtilisateur(rs));
             }
-            return null;
-
         } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la recherche par email", e);
+            e.printStackTrace();
         }
+        return list;
     }
 
     @Override
-    public Utilisateur findByLogin(String login) {
-        String sql = "SELECT * FROM utilisateurs WHERE login=?";
+    public void update(T u) {
+        String sql = String.format("""
+            UPDATE %s SET
+            nom = ?, prenom = ?, email = ?, adresse = ?, tel = ?, sexe = ?, login = ?, mot_de_passe = ?, date_derniere_connexion = ?, date_naissance = ?, role_id = ?
+            WHERE id = ?
+            """, tableName);
 
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, u.getNom());
+            ps.setString(2, u.getPrenom());
+            ps.setString(3, u.getEmail());
+            ps.setString(4, u.getAdresse());
+            ps.setString(5, u.getTel());
+            ps.setString(6, u.getSexe() != null ? u.getSexe().name() : null);
+            ps.setString(7, u.getLogin());
+            ps.setString(8, u.getMotDePasse());
+            ps.setDate(9, u.getDateDerniereConnexion() != null ? Date.valueOf(u.getDateDerniereConnexion()) : null);
+            ps.setDate(10, u.getDateNaissance() != null ? Date.valueOf(u.getDateNaissance()) : null);
+            ps.setObject(11, u.getRoleId());
+            ps.setLong(12, u.getId());
 
-            ps.setString(1, login);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                if (rs.next()) {
-                    return RowMappers.mapUtilisateur(rs);
-                }
-            }
-            return null;
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la recherche par login", e);
-        }
-    }
-
-    @Override
-    public List<Utilisateur> findByTypeUser(String typeUser) {
-        String sql = "SELECT * FROM utilisateurs WHERE type_user=? ORDER BY nom, prenom";
-        List<Utilisateur> utilisateurs = new ArrayList<>();
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setString(1, typeUser);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                while (rs.next()) {
-                    utilisateurs.add(RowMappers.mapUtilisateur(rs));
-                }
-            }
-
-            return utilisateurs;
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la recherche par type", e);
-        }
-    }
-
-    @Override
-    public boolean existsByEmail(String email) {
-        String sql = "SELECT 1 FROM utilisateurs WHERE email=?";
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setString(1, email);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la vérification de l'email", e);
-        }
-    }
-
-    @Override
-    public boolean existsByLogin(String login) {
-        String sql = "SELECT 1 FROM utilisateurs WHERE login=?";
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setString(1, login);
-
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next();
-            }
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la vérification du login", e);
-        }
-    }
-
-    @Override
-    public void updateLastLogin(Long userId) {
-        String sql = """
-            UPDATE utilisateurs 
-            SET date_derniere_connexion=?, premier_connexion=FALSE, updated_at=CURRENT_TIMESTAMP
-            WHERE id=?
-            """;
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setDate(1, Date.valueOf(LocalDate.now()));
-            ps.setLong(2, userId);
             ps.executeUpdate();
-
         } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la mise à jour de la dernière connexion", e);
+            e.printStackTrace();
         }
     }
 
     @Override
-    public void incrementFailedAttempts(Long userId) {
-        String sql = "UPDATE utilisateurs SET tentatives_echouees = tentatives_echouees + 1 WHERE id=?";
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setLong(1, userId);
+    public void delete(Long id) {
+        String sql = String.format("DELETE FROM %s WHERE id = ?", tableName);
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setLong(1, id);
             ps.executeUpdate();
-
         } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de l'incrémentation des tentatives échouées", e);
+            e.printStackTrace();
         }
     }
 
-    @Override
-    public void resetFailedAttempts(Long userId) {
-        String sql = "UPDATE utilisateurs SET tentatives_echouees=0, date_verrouillage=NULL WHERE id=?";
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setLong(1, userId);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors de la réinitialisation des tentatives", e);
-        }
-    }
-
-    @Override
-    public void lockAccount(Long userId) {
-        String sql = "UPDATE utilisateurs SET actif=FALSE, date_verrouillage=CURRENT_TIMESTAMP WHERE id=?";
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setLong(1, userId);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors du verrouillage du compte", e);
-        }
-    }
-
-    @Override
-    public void unlockAccount(Long userId) {
-        String sql = """
-            UPDATE utilisateurs 
-            SET actif=TRUE, tentatives_echouees=0, date_verrouillage=NULL 
-            WHERE id=?
-            """;
-
-        try (Connection c = SessionFactory.getInstance().getConnection();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-
-            ps.setLong(1, userId);
-            ps.executeUpdate();
-
-        } catch (SQLException e) {
-            throw new RuntimeException("Erreur lors du déverrouillage du compte", e);
-        }
-    }
-
-    // ========== MÉTHODE HELPER ==========
-
-    /**
-     * Détermine le type d'utilisateur à partir de la classe
-     */
-    private String determineTypeUser(Utilisateur u) {
-        String className = u.getClass().getSimpleName();
-
-        return switch (className) {
-            case "Admin" -> "ADMIN";
-            case "Medecin" -> "MEDECIN";
-            case "Secretaire" -> "SECRETAIRE";
-            case "Staff" -> "STAFF";
-            default -> "STAFF";
-        };
-    }
+    protected abstract T mapToUtilisateur(ResultSet rs) throws SQLException;
 }

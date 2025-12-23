@@ -1,10 +1,20 @@
 package ma.project.dentalTech.repository.modules.users.api;
 
-import ma.project.dentalTech.entities.enums.RoleType;
 import ma.project.dentalTech.entities.users.Role;
-import ma.project.dentalTech.repository.common.CrudRepository;
 
-public interface RoleRepository extends CrudRepository<Role, Long> {
+import java.util.List;
 
-    Role findByRoleType(RoleType roleType);
+public interface RoleRepository {
+
+    Role save(Role role);
+
+    Role findById(Long id);
+
+    Role findByNom(String nom);
+
+    List<Role> findAll();
+
+    void update(Role role);
+
+    void delete(Long id);
 }

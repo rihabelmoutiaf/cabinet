@@ -23,8 +23,7 @@ public class Certificat {
     }
 
 
-    public Certificat(Long id, Long patientId, Long utilisateurId, LocalDateTime dateEmission, String typeCertificat, Integer dureeEnJours, String motif) {
-        this.id = id;
+    public Certificat(Long patientId, Long utilisateurId, LocalDateTime dateEmission, String typeCertificat, Integer dureeEnJours, String motif) {
         this.patientId = patientId;
         this.utilisateurId = utilisateurId;
         this.dateEmission = dateEmission;
@@ -32,6 +31,7 @@ public class Certificat {
         this.dureeEnJours = dureeEnJours;
         this.motif = motif;
     }
+
 
 
 

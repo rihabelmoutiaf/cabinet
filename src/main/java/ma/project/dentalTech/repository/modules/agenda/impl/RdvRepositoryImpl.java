@@ -5,16 +5,16 @@ package ma.project.dentalTech.repository.modules.agenda.impl;
 import ma.project.dentalTech.entities.agenda.RDV;
 import ma.project.dentalTech.configuration.SessionFactory;
 import ma.project.dentalTech.repository.common.RowMappers;
-import ma.project.dentalTech.repository.modules.agenda.api.RDVRepository;
+import ma.project.dentalTech.repository.modules.agenda.api.RdvRepository;
 
 import java.sql.*;
-import java.time.LocalDate;
+        import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class RdvRepositoryImpl implements RDVRepository {
+public class RdvRepositoryImpl implements RdvRepository {
 
 
 
