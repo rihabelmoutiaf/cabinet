@@ -10,18 +10,13 @@ public final class RowMappers {
 
     private RowMappers() {}
 
-    // =======================
-    // PATIENT
-    // =======================
+
     public static Patient mapPatient(ResultSet rs) throws SQLException {
         Patient p = new Patient();
         p.setId(rs.getLong("id"));
         return p;
     }
 
-    // =======================
-    // DOSSIER MEDICAL
-    // =======================
     public static DossierMedical mapDossierMedical(ResultSet rs) throws SQLException {
         DossierMedical d = new DossierMedical();
         d.setId(rs.getLong("id"));
