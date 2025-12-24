@@ -9,4 +9,6 @@ public class PatientDTO {
     private String dateCreationFormatee;
 
 
+    public static Object builder() {
+    }
 }
