@@ -10,5 +10,6 @@ public class PatientDTO {
 
 
     public static Object builder() {
+        return null;
     }
 }
