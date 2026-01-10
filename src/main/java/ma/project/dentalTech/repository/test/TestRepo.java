@@ -1,52 +1,55 @@
 package ma.project.dentalTech.repository.test;
 
+import ma.project.dentalTech.entities.agenda.RDV;
 import ma.project.dentalTech.entities.dossierMedical.Consultation;
+import ma.project.dentalTech.entities.enums.StatutRDV;
+import ma.project.dentalTech.repository.modules.agenda.api.RdvRepository;
+import ma.project.dentalTech.repository.modules.agenda.impl.RdvRepositoryImpl;
 import ma.project.dentalTech.repository.modules.dossierMedical.impl.ConsultationRepositoryImpl;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public class TestRepo {
 
     public static void main(String[] args) {
-        // 1️⃣ Connexion à la base
-        try (Connection conn = DriverManager.getConnection(
-                "jdbc:mysql://localhost:3306/dentaldb",
-                "root",
-                "")) {
+        RdvRepository rdvRepository = new RdvRepositoryImpl();
 
-            // 2️⃣ Créer le repository
-            ConsultationRepositoryImpl repo = new ConsultationRepositoryImpl(conn);
+        RDV rdv = new RDV();
+        rdv.setPatientId(1L);
+        rdv.setMedecinId(2L);
+        rdv.setDateHeure(LocalDateTime.now().plusDays(1));
+        rdv.setMotif("Consultation test");
+        rdv.setStatut(StatutRDV.PLANIFIE);
 
-            // 3️⃣ Créer une consultation test
-            Consultation c = new Consultation();
-            c.setPatientId(1L);
-            c.setUtilisateurId(1L);
-            c.setDateConsultation(LocalDateTime.now());
-            c.setDiagnostic("Test diagnostic");
-            c.setTraitement("Test traitement");
-            c.setObservationMedecin("Test observation");
+        rdvRepository.create(rdv);
+        System.out.println("RDV créé avec ID = " + rdv.getId());
 
-            repo.create(c);
-            System.out.println("Consultation créée avec ID = " + c.getId());
 
-            // 4️⃣ Lire toutes les consultations
-            List<Consultation> consultations = repo.findAll();
-            consultations.forEach(cons -> System.out.println(cons.getDiagnostic()));
+        Optional<RDV> found = rdvRepository.findById(rdv.getId());
+        System.out.println("RDV trouvé : " + found.orElse(null));
 
-            // 5️⃣ Mettre à jour la consultation
-            c.setDiagnostic("Diagnostic modifié");
-            repo.update(c);
-            System.out.println("Consultation mise à jour.");
 
-            // 6️⃣ Supprimer la consultation
-            repo.delete(c);
-            System.out.println("Consultation supprimée.");
+        List<RDV> all = rdvRepository.findAll();
+        System.out.println("Nombre total RDV = " + all.size());
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+
+        List<RDV> byPatient = rdvRepository.findByPatientId(1L);
+        System.out.println("RDV du patient 1 = " + byPatient.size());
+
+
+        List<RDV> byMedecin = rdvRepository.findByMedecinId(2L);
+        System.out.println("RDV du médecin 2 = " + byMedecin.size());
+
+
+        List<RDV> today = rdvRepository.findTodayRdv();
+        System.out.println("RDV aujourd'hui = " + today.size());
+
+
+        rdvRepository.deleteById(rdv.getId());
+        System.out.println("RDV supprimé");
     }
 }
