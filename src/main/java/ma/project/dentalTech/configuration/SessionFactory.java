@@ -1,7 +1,5 @@
 package ma.project.dentalTech.configuration;
 
-import java.sql.DatabaseMetaData;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;

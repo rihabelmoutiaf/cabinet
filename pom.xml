@@ -101,12 +101,6 @@
             <version>${mockito.version}</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.38</version>
-            <scope>provided</scope>
-        </dependency>
         <!-- === Mockito JUnit 5 Extension === -->
         <dependency>
             <groupId>org.mockito</groupId>
@@ -119,6 +113,22 @@
 
     <!-- ================== Build & Plugins ================== -->
     <build>
+        <!-- Configuration des ressources -->
+        <resources>
+            <!-- Ressources standards dans src/main/resources -->
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <!-- Ressources personnalisées dans src/main/java/ma/project/resources -->
+            <resource>
+                <directory>src/main/java/ma/project/resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                    <include>**/*.sql</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
 
             <!-- (0) Maven Enforcer : GARANTIR la même version de Java partout -->
@@ -166,7 +176,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>ma.dentalTech.MainApp</mainClass>
+                                    <mainClass>ma.project.dentalTech.Main</mainClass>
                                 </transformer>
                             </transformers>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
